@@ -33,10 +33,10 @@ task :all => [:lint, :min] do
   puts "BaseCJK build complete."
 end
 
-desc "Builds a minified version of jQuery: jquery.min.js"
+desc "Builds a minified version of BaseCJK: base_cjk.min.js"
 task :min => basecjk_min
 
-desc "Removes dist folder, selector.js, and Sizzle/QUnit"
+desc "Removes dist folder"
 task :clean do
   puts "Removing Distribution directory: #{dist_dir}..."
   rm_rf dist_dir
@@ -44,7 +44,7 @@ end
 
 desc "Tests built basecjk.js against JSLint"
 task :lint => basecjk do
-  puts "Checking jQuery against JSLint..."
+  puts "Checking BaseCJK against JSLint..."
   sh "#{rhino} " + File.join(build_dir, 'jslint-check.js')
 end
 
@@ -52,7 +52,7 @@ end
 directory dist_dir
 
 file basecjk => [dist_dir, base_files].flatten do
-  puts "Building jquery.js..."
+  puts "Building base_cjk.js..."
 
   File.open(basecjk, 'w') do |f|
     f.write cat(base_files).gsub(/(Date:.)/, "\\1#{date}" ).gsub(/@VERSION/, version)
@@ -60,7 +60,7 @@ file basecjk => [dist_dir, base_files].flatten do
 end
 
 file basecjk_min => basecjk do
-  puts "Building jquery.min.js..."
+  puts "Building base_cjk.min.js..."
 
   sh "#{minfier} --js #{basecjk} --warning_level QUIET --js_output_file #{basecjk_min}"
 
